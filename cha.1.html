@@ -533,7 +533,8 @@
                 <h2 class="text-3xl font-bold text-slate-800">資訊時代 (Information Age)</h2>
             </div>
 
-            <div class="space-y-6">
+            <div class="space-y-8">
+                <!-- 工業 vs 資訊時代 -->
                 <div class="bg-white p-6 rounded-xl border border-gray-200">
                     <h3 class="font-bold text-lg mb-4 text-indigo-800">工業時代 vs 資訊時代</h3>
                     <div class="overflow-x-auto">
@@ -566,6 +567,109 @@
                     </div>
                 </div>
 
+                <!-- 新興技術展示區 (IoT, Big Data, AI) -->
+                <div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <i data-lucide="sparkles" class="w-6 h-6 text-yellow-500"></i>
+                        新興技術 (Emerging Technologies)
+                    </h3>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <!-- IoT -->
+                        <div class="bg-sky-50 rounded-xl p-5 border border-sky-100 hover:shadow-md transition">
+                            <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center mb-4 shadow-sm text-sky-600">
+                                <i data-lucide="wifi" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-sky-900 mb-2">物聯網 (IoT)</h4>
+                            <p class="text-xs text-sky-800 mb-3">Internet of Things</p>
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                將日常物品（如雪櫃、燈泡、汽車）連接到互聯網，使它們能收集和交換數據。
+                            </p>
+                            <div class="mt-3 pt-3 border-t border-sky-100 text-xs text-slate-500">
+                                <span class="font-bold">例子：</span>智能家居 (Smart Home)
+                            </div>
+                        </div>
+
+                        <!-- Big Data -->
+                        <div class="bg-violet-50 rounded-xl p-5 border border-violet-100 hover:shadow-md transition">
+                            <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center mb-4 shadow-sm text-violet-600">
+                                <i data-lucide="database-zap" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-violet-900 mb-2">大數據 (Big Data)</h4>
+                            <p class="text-xs text-violet-800 mb-3">Volume, Velocity, Variety</p>
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                指傳統軟體無法處理的海量、高速且多變的數據集合。通過分析可預測趨勢。
+                            </p>
+                            <div class="mt-3 pt-3 border-t border-violet-100 text-xs text-slate-500">
+                                <span class="font-bold">例子：</span>YouTube 影片推薦系統
+                            </div>
+                        </div>
+
+                        <!-- AI -->
+                        <div class="bg-rose-50 rounded-xl p-5 border border-rose-100 hover:shadow-md transition">
+                            <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center mb-4 shadow-sm text-rose-600">
+                                <i data-lucide="bot" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-rose-900 mb-2">人工智能 (AI)</h4>
+                            <p class="text-xs text-rose-800 mb-3">Artificial Intelligence</p>
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                電腦系統模擬人類的智慧，執行如學習、推理、解難和識別語音等任務。
+                            </p>
+                            <div class="mt-3 pt-3 border-t border-rose-100 text-xs text-slate-500">
+                                <span class="font-bold">例子：</span>ChatGPT, 自駕車
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 資訊素養 (Information Literacy) -->
+                <div class="bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl p-8 text-white relative overflow-hidden">
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="p-2 bg-white/10 rounded-lg backdrop-blur-sm">
+                                <i data-lucide="book-open-check" class="w-6 h-6 text-emerald-400"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold">資訊素養 (Information Literacy)</h3>
+                        </div>
+                        
+                        <p class="text-slate-300 mb-8 max-w-2xl">
+                            在資訊爆炸的時代，懂得如何使用電腦並不足夠。我們需要具備<strong>有效</strong>且<strong>合乎道德</strong>地獲取和使用資訊的能力。主要包含以下四個層面：
+                        </p>
+
+                        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <!-- 1. 知識產權 -->
+                            <div class="bg-white/5 p-4 rounded-xl border border-white/10 hover:bg-white/10 transition">
+                                <div class="text-emerald-400 font-bold mb-2">1. 知識產權</div>
+                                <p class="text-xs text-slate-300 font-mono mb-2">Intellectual Property</p>
+                                <p class="text-xs text-slate-400">尊重原創作品的版權。使用他人作品時需獲得授權或註明出處。</p>
+                            </div>
+                            
+                            <!-- 2. 數據私隱 -->
+                            <div class="bg-white/5 p-4 rounded-xl border border-white/10 hover:bg-white/10 transition">
+                                <div class="text-emerald-400 font-bold mb-2">2. 數據私隱</div>
+                                <p class="text-xs text-slate-300 font-mono mb-2">Data Privacy</p>
+                                <p class="text-xs text-slate-400">保護個人資料（如密碼、地址）不被未經授權的存取或濫用。</p>
+                            </div>
+                            
+                            <!-- 3. 可信度 -->
+                            <div class="bg-white/5 p-4 rounded-xl border border-white/10 hover:bg-white/10 transition">
+                                <div class="text-emerald-400 font-bold mb-2">3. 可信度</div>
+                                <p class="text-xs text-slate-300 font-mono mb-2">Reliability</p>
+                                <p class="text-xs text-slate-400">評估資訊來源的準確性、權威性、客觀性及時效性 (Fact check)。</p>
+                            </div>
+                            
+                            <!-- 4. 提取和組織 -->
+                            <div class="bg-white/5 p-4 rounded-xl border border-white/10 hover:bg-white/10 transition">
+                                <div class="text-emerald-400 font-bold mb-2">4. 提取和組織</div>
+                                <p class="text-xs text-slate-300 font-mono mb-2">Extraction & Org.</p>
+                                <p class="text-xs text-slate-400">從大量資料中篩選相關資訊，並有條理地分類儲存以便使用。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 背景裝飾 -->
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -mr-16 -mt-16"></div>
+                </div>
+
                 <div class="grid md:grid-cols-2 gap-6">
                     <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
                         <h4 class="font-bold text-lg text-blue-800 mb-2">知識型經濟 (Knowledge-based Economy)</h4>
@@ -591,10 +695,10 @@
             <div class="max-w-2xl mx-auto space-y-6 relative z-10 text-left">
                 <!-- Q1 -->
                 <div class="bg-indigo-800 p-6 rounded-xl border border-indigo-700">
-                    <p class="font-bold text-lg mb-4">1. 「人類的聲音」屬於哪種訊號？</p>
+                    <p class="font-bold text-lg mb-4">1. 哪種技術能將日常物品連接上網？</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <button class="quiz-btn p-3 bg-indigo-950 rounded hover:bg-indigo-700 transition text-sm text-left" onclick="checkFinalQuiz(this, true)">A. 模擬訊號 (Analog)</button>
-                        <button class="quiz-btn p-3 bg-indigo-950 rounded hover:bg-indigo-700 transition text-sm text-left" onclick="checkFinalQuiz(this, false)">B. 數碼訊號 (Digital)</button>
+                        <button class="quiz-btn p-3 bg-indigo-950 rounded hover:bg-indigo-700 transition text-sm text-left" onclick="checkFinalQuiz(this, true)">A. 物聯網 (IoT)</button>
+                        <button class="quiz-btn p-3 bg-indigo-950 rounded hover:bg-indigo-700 transition text-sm text-left" onclick="checkFinalQuiz(this, false)">B. 大數據 (Big Data)</button>
                     </div>
                 </div>
 
