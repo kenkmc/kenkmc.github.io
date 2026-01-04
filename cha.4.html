@@ -43,10 +43,6 @@
         /* 排序表格樣式 */
         .sortable-th { cursor: pointer; user-select: none; }
         .sortable-th:hover { background-color: #e2e8f0; }
-
-        /* VLOOKUP Table Highlight */
-        .highlight-lookup { background-color: #fef3c7; border: 2px solid #f59e0b; }
-        .highlight-result { background-color: #d1fae5; border: 2px solid #10b981; font-weight: bold; }
     </style>
 </head>
 <body class="text-slate-700 flex flex-col min-h-screen">
@@ -222,14 +218,14 @@
             </div>
         </section>
 
-        <!-- 4.4 函數 Functions (UPDATED) -->
+        <!-- 4.4 函數 Functions (UPDATED & EXPANDED) -->
         <section id="sec4-4" class="scroll-mt-24">
             <div class="flex items-center gap-3 mb-6">
                 <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-bold text-sm">4.4</span>
                 <h2 class="text-3xl font-bold text-slate-800">函數 (Functions)</h2>
             </div>
 
-            <p class="text-slate-600 mb-6">函數是預設的公式，用來簡化複雜的計算。以下是進階函數的詳細解說與範例。</p>
+            <p class="text-slate-600 mb-6">函數是預設的公式，用來簡化複雜的計算。以下是常用的函數及其應用。</p>
 
             <!-- 函數分類展示 -->
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
@@ -237,8 +233,8 @@
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                     <h4 class="font-bold text-slate-800 mb-3 border-b pb-2 flex items-center gap-2"><i data-lucide="calculator" class="w-4 h-4 text-blue-500"></i> 基礎統計</h4>
                     <ul class="space-y-3 text-sm">
-                        <li><code class="text-blue-600 font-bold">=SUM(範圍)</code><br><span class="text-xs text-slate-500">計算總和。例: =SUM(A1:A5) -> 100</span></li>
-                        <li><code class="text-blue-600 font-bold">=AVERAGE(範圍)</code><br><span class="text-xs text-slate-500">計算平均值。例: =AVERAGE(B1:B5) -> 50</span></li>
+                        <li><code class="text-blue-600 font-bold">=SUM(範圍)</code><br><span class="text-xs text-slate-500">計算總和。例: =SUM(A1:A5)</span></li>
+                        <li><code class="text-blue-600 font-bold">=AVERAGE(範圍)</code><br><span class="text-xs text-slate-500">計算平均值。例: =AVERAGE(B1:B5)</span></li>
                         <li><code class="text-blue-600 font-bold">=MAX(範圍) / MIN(範圍)</code><br><span class="text-xs text-slate-500">找出最大/最小值。</span></li>
                         <li><code class="text-blue-600 font-bold">=COUNT(範圍)</code><br><span class="text-xs text-slate-500">計算包含<b>數字</b>的儲存格數目。</span></li>
                     </ul>
@@ -248,9 +244,9 @@
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                     <h4 class="font-bold text-slate-800 mb-3 border-b pb-2 flex items-center gap-2"><i data-lucide="git-branch" class="w-4 h-4 text-purple-500"></i> 條件邏輯</h4>
                     <ul class="space-y-3 text-sm">
-                        <li><code class="text-purple-600 font-bold">=IF(條件, 真值, 假值)</code><br><span class="text-xs text-slate-500">條件判斷。例: =IF(A1>=50, "及格", "不及格")</span></li>
-                        <li><code class="text-purple-600 font-bold">=COUNTIF(範圍, 準則)</code><br><span class="text-xs text-slate-500">計算符合條件的個數。例: =COUNTIF(A1:A10, ">50") -> 5 (人)</span></li>
-                        <li><code class="text-purple-600 font-bold">=SUMIF(範圍, 準則, [加總範圍])</code><br><span class="text-xs text-slate-500">加總符合條件的數值。例: =SUMIF(B1:B10, "Apple", C1:C10) -> 計算蘋果的總銷量</span></li>
+                        <li><code class="text-purple-600 font-bold">=IF(條件, 真值, 假值)</code><br><span class="text-xs text-slate-500">判斷。例: =IF(A1>=50, "及格", "不及格")</span></li>
+                        <li><code class="text-purple-600 font-bold">=COUNTIF(範圍, 準則)</code><br><span class="text-xs text-slate-500">計數符合條件。例: =COUNTIF(A1:A10, ">50")</span></li>
+                        <li><code class="text-purple-600 font-bold">=SUMIF(範圍, 準則, [加總範圍])</code><br><span class="text-xs text-slate-500">加總符合條件。例: =SUMIF(B1:B10, "Apple", C1:C10)</span></li>
                     </ul>
                 </div>
 
@@ -258,10 +254,10 @@
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                     <h4 class="font-bold text-slate-800 mb-3 border-b pb-2 flex items-center gap-2"><i data-lucide="type" class="w-4 h-4 text-orange-500"></i> 文字處理</h4>
                     <ul class="space-y-3 text-sm">
-                        <li><code class="text-orange-600 font-bold">=LEN(文字)</code><br><span class="text-xs text-slate-500">計算字符長度。例: =LEN("Hello") -> 5</span></li>
-                        <li><code class="text-orange-600 font-bold">=LEFT(文字, n)</code><br><span class="text-xs text-slate-500">取左邊 n 個字。例: =LEFT("A123", 1) -> "A"</span></li>
-                        <li><code class="text-orange-600 font-bold">=RIGHT(文字, n)</code><br><span class="text-xs text-slate-500">取右邊 n 個字。例: =RIGHT("A123", 3) -> "123"</span></li>
-                        <li><code class="text-orange-600 font-bold">=MID(文字, start, n)</code><br><span class="text-xs text-slate-500">從中間取字。例: =MID("HK1234", 3, 4) -> "1234"</span></li>
+                        <li><code class="text-orange-600 font-bold">=LEN(文字)</code><br><span class="text-xs text-slate-500">計算長度。例: =LEN("Hello") -> 5</span></li>
+                        <li><code class="text-orange-600 font-bold">=LEFT(文字, n)</code><br><span class="text-xs text-slate-500">取左邊 n 字。例: =LEFT("A123", 1) -> "A"</span></li>
+                        <li><code class="text-orange-600 font-bold">=RIGHT(文字, n)</code><br><span class="text-xs text-slate-500">取右邊 n 字。例: =RIGHT("A123", 3) -> "123"</span></li>
+                        <li><code class="text-orange-600 font-bold">=MID(文字, start, n)</code><br><span class="text-xs text-slate-500">取中間字。例: =MID("HK1234", 3, 4) -> "1234"</span></li>
                     </ul>
                 </div>
 
@@ -271,55 +267,65 @@
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <code class="text-emerald-600 font-bold block mb-1">=VLOOKUP(查閱值, 表格範圍, 欄號, [匹配模式])</code>
-                            <p class="text-xs text-slate-600 mb-2">垂直查找。在表格的第一欄尋找「查閱值」，然後傳回該列指定「欄號」的資料。</p>
-                            <div class="bg-gray-100 p-2 rounded text-xs font-mono">
-                                A | B<br>
-                                101 | Apple<br>
-                                102 | Orange<br>
-                                =VLOOKUP(101, A:B, 2, FALSE) -> "Apple"
-                            </div>
+                            <p class="text-xs text-slate-600 mb-2">垂直查找。在表格首欄找「查閱值」，傳回該列指定「欄號」的資料。</p>
                         </div>
                         <div>
                             <code class="text-emerald-600 font-bold block mb-1">=XLOOKUP(查閱值, 查閱陣列, 傳回陣列, ...)</code>
-                            <p class="text-xs text-slate-600 mb-2">新一代查找函數。更靈活，不需要指定欄號，可向左或向右查找。</p>
-                            <div class="bg-gray-100 p-2 rounded text-xs font-mono">
-                                =XLOOKUP(102, A:A, B:B) -> "Orange"
-                            </div>
+                            <p class="text-xs text-slate-600 mb-2">新一代查找函數。更靈活，不需要指定欄號。</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 函數實驗室 (Expanded) -->
+            <!-- 函數實驗室 (Updated with Worksheet View) -->
             <div class="bg-slate-800 rounded-2xl p-6 text-white shadow-xl">
                 <h3 class="text-xl font-bold mb-4 flex items-center gap-2"><i data-lucide="flask-conical" class="w-5 h-5 text-yellow-400"></i> 函數實驗室</h3>
-                <div class="grid md:grid-cols-2 gap-8">
+                
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- 左側：模擬工作表數據 -->
                     <div class="space-y-4">
-                        <div class="bg-slate-700 p-4 rounded-lg text-sm">
-                            <p class="mb-2 font-bold text-slate-300">測試數據 (Data)：</p>
-                            <div class="font-mono text-xs text-slate-400">
-                                A1: "Apple" &nbsp;&nbsp; B1: 50<br>
-                                A2: "Banana" &nbsp; B2: 30<br>
-                                A3: "Apple" &nbsp;&nbsp; B3: 20<br>
-                                A4: "Orange" &nbsp; B4: 80
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-2">
-                            <p class="text-xs text-slate-400 mb-1">點擊測試函數：</p>
-                            <div class="flex flex-wrap gap-2">
-                                <button onclick="runAdvFunc('LEN')" class="bg-orange-600 hover:bg-orange-500 px-3 py-1 rounded text-xs font-mono transition">LEN("Apple")</button>
-                                <button onclick="runAdvFunc('LEFT')" class="bg-orange-600 hover:bg-orange-500 px-3 py-1 rounded text-xs font-mono transition">LEFT("HK123",2)</button>
-                                <button onclick="runAdvFunc('COUNTIF')" class="bg-purple-600 hover:bg-purple-500 px-3 py-1 rounded text-xs font-mono transition">COUNTIF("Apple")</button>
-                                <button onclick="runAdvFunc('SUMIF')" class="bg-purple-600 hover:bg-purple-500 px-3 py-1 rounded text-xs font-mono transition">SUMIF("Apple")</button>
-                                <button onclick="runAdvFunc('VLOOKUP')" class="bg-emerald-600 hover:bg-emerald-500 px-3 py-1 rounded text-xs font-mono transition">VLOOKUP("Banana")</button>
-                            </div>
+                        <p class="text-sm text-slate-300 font-bold">測試數據 (Data Worksheet):</p>
+                        <div class="bg-white text-slate-800 rounded-lg overflow-hidden text-xs font-mono border border-slate-600">
+                            <table class="w-full text-center">
+                                <thead class="bg-slate-200 font-bold">
+                                    <tr><th class="border p-1 w-8"></th><th class="border p-1">A</th><th class="border p-1">B</th><th class="border p-1">C</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td class="bg-slate-100 font-bold border">1</td><td class="border p-1">Item</td><td class="border p-1">Price</td><td class="border p-1">Code</td></tr>
+                                    <tr><td class="bg-slate-100 font-bold border">2</td><td class="border p-1">Apple</td><td class="border p-1">10</td><td class="border p-1">A-001</td></tr>
+                                    <tr><td class="bg-slate-100 font-bold border">3</td><td class="border p-1">Banana</td><td class="border p-1">5</td><td class="border p-1">B-002</td></tr>
+                                    <tr><td class="bg-slate-100 font-bold border">4</td><td class="border p-1">Apple</td><td class="border p-1">10</td><td class="border p-1">A-003</td></tr>
+                                    <tr><td class="bg-slate-100 font-bold border">5</td><td class="border p-1">Orange</td><td class="border p-1">8</td><td class="border p-1">O-004</td></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
-                    <div class="bg-black/30 p-6 rounded-xl flex flex-col justify-center items-center text-center">
-                        <div class="text-xs text-slate-400 mb-1" id="advFuncDesc">等待操作...</div>
-                        <div class="text-2xl font-bold text-yellow-400 font-mono" id="advFuncResult">---</div>
+                    <!-- 右側：函數操作 -->
+                    <div class="flex flex-col justify-center space-y-4">
+                        <p class="text-xs text-slate-400">點擊按鈕執行函數：</p>
+                        <div class="flex flex-wrap gap-2">
+                            <!-- 基礎 -->
+                            <button onclick="runSheetFunc('SUM')" class="bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded text-xs font-mono transition">SUM(B2:B5)</button>
+                            <button onclick="runSheetFunc('AVERAGE')" class="bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded text-xs font-mono transition">AVERAGE(B2:B5)</button>
+                            
+                            <!-- 文字 -->
+                            <button onclick="runSheetFunc('LEN')" class="bg-orange-600 hover:bg-orange-500 px-3 py-1 rounded text-xs font-mono transition">LEN(A2)</button>
+                            <button onclick="runSheetFunc('LEFT')" class="bg-orange-600 hover:bg-orange-500 px-3 py-1 rounded text-xs font-mono transition">LEFT(C2, 1)</button>
+                            <button onclick="runSheetFunc('MID')" class="bg-orange-600 hover:bg-orange-500 px-3 py-1 rounded text-xs font-mono transition">MID(C3, 3, 3)</button>
+                            
+                            <!-- 條件 -->
+                            <button onclick="runSheetFunc('COUNTIF')" class="bg-purple-600 hover:bg-purple-500 px-3 py-1 rounded text-xs font-mono transition">COUNTIF(A2:A5, "Apple")</button>
+                            <button onclick="runSheetFunc('SUMIF')" class="bg-purple-600 hover:bg-purple-500 px-3 py-1 rounded text-xs font-mono transition">SUMIF(A2:A5, "Apple", B2:B5)</button>
+                            
+                            <!-- 查找 -->
+                            <button onclick="runSheetFunc('VLOOKUP')" class="bg-emerald-600 hover:bg-emerald-500 px-3 py-1 rounded text-xs font-mono transition">VLOOKUP("Banana", A2:B5, 2, 0)</button>
+                        </div>
+
+                        <div class="bg-black/30 p-4 rounded-xl text-center mt-4">
+                            <div class="text-xs text-slate-400 mb-1" id="sheetFuncDesc">等待操作...</div>
+                            <div class="text-2xl font-bold text-yellow-400 font-mono" id="sheetFuncResult">---</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -375,7 +381,6 @@
                     <button onclick="showChart('column')" class="chart-btn active px-4 py-2 rounded-full border text-sm font-bold text-slate-600 hover:bg-slate-100 transition">棒形圖</button>
                     <button onclick="showChart('line')" class="chart-btn px-4 py-2 rounded-full border text-sm font-bold text-slate-600 hover:bg-slate-100 transition">折線圖</button>
                     <button onclick="showChart('pie')" class="chart-btn px-4 py-2 rounded-full border text-sm font-bold text-slate-600 hover:bg-slate-100 transition">圓形圖</button>
-                    <button onclick="showChart('scatter')" class="chart-btn px-4 py-2 rounded-full border text-sm font-bold text-slate-600 hover:bg-slate-100 transition">散佈圖</button>
                 </div>
 
                 <div class="bg-slate-50 p-6 rounded-xl flex justify-center items-center h-64 border border-slate-100 text-center">
@@ -394,19 +399,18 @@
                         <p class="font-bold text-slate-700">折線圖 (Line Chart)</p>
                         <p class="text-xs text-slate-500">用途：顯示趨勢 (如氣溫變化)。</p>
                     </div>
+                    <!-- Pie Chart (Improved SVG) -->
                     <div id="chart-pie" class="chart-content w-full hidden">
-                        <svg viewBox="0 0 32 32" class="w-32 h-32 mx-auto mb-2 transform -rotate-90"><circle r="16" cx="16" cy="16" fill="#fbbf24" stroke="#fbbf24" stroke-width="32" stroke-dasharray="25 100"/><circle r="16" cx="16" cy="16" fill="transparent" stroke="#3b82f6" stroke-width="32" stroke-dasharray="40 100" stroke-dashoffset="-25"/></svg>
+                        <svg viewBox="0 0 32 32" class="w-32 h-32 mx-auto mb-2 transform -rotate-90">
+                            <!-- 25% (90deg) - Yellow -->
+                            <circle r="16" cx="16" cy="16" fill="transparent" stroke="#fbbf24" stroke-width="32" stroke-dasharray="25 100" />
+                            <!-- 40% (144deg) - Blue -->
+                            <circle r="16" cx="16" cy="16" fill="transparent" stroke="#3b82f6" stroke-width="32" stroke-dasharray="40 100" stroke-dashoffset="-25" />
+                            <!-- 35% (126deg) - Green -->
+                            <circle r="16" cx="16" cy="16" fill="transparent" stroke="#10b981" stroke-width="32" stroke-dasharray="35 100" stroke-dashoffset="-65" />
+                        </svg>
                         <p class="font-bold text-slate-700">圓形圖 (Pie Chart)</p>
                         <p class="text-xs text-slate-500">用途：顯示比例 (如血型分佈)。</p>
-                    </div>
-                    <div id="chart-scatter" class="chart-content w-full hidden">
-                         <div class="h-32 w-48 mx-auto relative mb-2 border-l border-b border-gray-400">
-                             <div class="absolute left-[20%] bottom-[30%] w-2 h-2 bg-purple-600 rounded-full"></div>
-                             <div class="absolute left-[50%] bottom-[60%] w-2 h-2 bg-purple-600 rounded-full"></div>
-                             <div class="absolute left-[80%] bottom-[80%] w-2 h-2 bg-purple-600 rounded-full"></div>
-                         </div>
-                         <p class="font-bold text-slate-700">散佈圖 (Scatter Chart)</p>
-                         <p class="text-xs text-slate-500">用途：顯示兩變數關係 (相關性)。</p>
                     </div>
                 </div>
             </div>
@@ -420,11 +424,9 @@
             </div>
 
             <div class="space-y-8">
-                <!-- 基本分析 (排序與篩選) -->
+                <!-- 基本分析 -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                    <p class="text-slate-600 mb-6">
-                        基本工具：<span class="font-bold">排序 (Sorting)</span> 和 <span class="font-bold">篩選 (Filtering)</span>。
-                    </p>
+                    <p class="text-slate-600 mb-6">基本工具：<span class="font-bold">排序 (Sorting)</span> 和 <span class="font-bold">篩選 (Filtering)</span>。</p>
                     <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
                         <div class="flex justify-between items-center mb-4">
                             <h4 class="font-bold text-slate-700 flex items-center gap-2"><i data-lucide="filter" class="w-4 h-4"></i> 互動分析表</h4>
@@ -449,17 +451,15 @@
                 <!-- 進階分析工具 (Advanced Analysis) -->
                 <div class="grid md:grid-cols-2 gap-8">
                     
-                    <!-- 藍本管理員 (Scenario Manager) -->
+                    <!-- 藍本管理員 -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
                         <div class="flex items-center gap-2 mb-4 text-rose-700">
                             <i data-lucide="layers-2" class="w-6 h-6"></i>
                             <h3 class="text-xl font-bold">藍本管理員 (Scenario Manager)</h3>
                         </div>
                         <p class="text-sm text-slate-600 mb-4">
-                            用於<span class="font-bold">「假設分析」 (What-if Analysis)</span>。建立不同的數據組合（藍本），比較不同情況下的結果（如利潤預測）。
+                            用於<span class="font-bold">「假設分析」 (What-if Analysis)</span>。建立不同的數據組合，比較不同情況下的結果。
                         </p>
-                        
-                        <!-- 模擬 -->
                         <div class="bg-rose-50 p-4 rounded-lg border border-rose-100">
                             <div class="flex justify-between text-xs font-bold text-rose-800 mb-2">
                                 <span>選擇情境：</span>
@@ -470,39 +470,57 @@
                                 </select>
                             </div>
                             <div class="space-y-2 text-sm">
-                                <div class="flex justify-between"><span>銷量：</span><span id="scSales">500</span></div>
+                                <div class="flex justify-between"><span>預計銷量：</span><span id="scSales">500</span></div>
                                 <div class="flex justify-between"><span>單價：</span><span>$10</span></div>
                                 <div class="flex justify-between font-bold text-rose-700 border-t border-rose-200 pt-1"><span>預計收入：</span><span id="scIncome">$5000</span></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 樞紐分析表 (Pivot Table) -->
+                    <!-- 樞紐分析表 (Pivot Table) - UPDATED -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
                         <div class="flex items-center gap-2 mb-4 text-emerald-700">
                             <i data-lucide="table-2" class="w-6 h-6"></i>
                             <h3 class="text-xl font-bold">樞紐分析表 (Pivot Table)</h3>
                         </div>
                         <p class="text-sm text-slate-600 mb-4">
-                            從大量複雜的數據中，快速<span class="font-bold">匯總 (Summarize)</span>、分析及排列數據。例如：計算每個班別的平均分。
+                            從大量數據中快速<span class="font-bold">匯總</span>、分析及排列。將雜亂的記錄轉化為有意義的報告。
                         </p>
 
-                        <!-- 模擬 -->
-                        <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-100 text-sm">
-                            <div class="text-xs text-slate-500 mb-2">原始數據：1000 行學生成績...</div>
-                            <div class="bg-white border border-emerald-200 rounded shadow-sm overflow-hidden">
-                                <table class="w-full text-center">
-                                    <thead class="bg-emerald-100 text-emerald-800 text-xs">
-                                        <tr><th>班別</th><th>人數</th><th>平均分</th></tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="border-b border-gray-100"><td>4A</td><td>30</td><td>78.5</td></tr>
-                                        <tr class="border-b border-gray-100"><td>4B</td><td>28</td><td>72.0</td></tr>
-                                        <tr><td>4C</td><td>29</td><td>68.5</td></tr>
-                                    </tbody>
-                                </table>
+                        <!-- P.70 概念解說 -->
+                        <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-100 text-xs">
+                            <div class="grid grid-cols-2 gap-2 mb-4">
+                                <div class="bg-white p-2 rounded border border-emerald-200">
+                                    <strong class="text-emerald-800 block mb-1">列 (Rows)</strong>
+                                    <span class="text-slate-500">分類項目，顯示在左側。<br>例：班別 (4A, 4B)</span>
+                                </div>
+                                <div class="bg-white p-2 rounded border border-emerald-200">
+                                    <strong class="text-emerald-800 block mb-1">欄 (Columns)</strong>
+                                    <span class="text-slate-500">分類項目，顯示在上方。<br>例：性別 (M, F)</span>
+                                </div>
+                                <div class="col-span-2 bg-white p-2 rounded border border-emerald-200">
+                                    <strong class="text-emerald-800 block mb-1">值 (Values)</strong>
+                                    <span class="text-slate-500">計算的數據內容。<br>例：平均分、總人數 (Count/Sum)</span>
+                                </div>
                             </div>
-                            <p class="text-[10px] text-emerald-600 mt-2 text-center">只需拖放欄位，即可自動生成此表。</p>
+                            
+                            <!-- 模擬結果 -->
+                            <table class="w-full text-center bg-white border border-emerald-200 text-[10px]">
+                                <thead class="bg-emerald-100 text-emerald-900 font-bold">
+                                    <tr>
+                                        <th class="border border-emerald-200 p-1">班別 (Row)</th>
+                                        <th class="border border-emerald-200 p-1">男 (Col)</th>
+                                        <th class="border border-emerald-200 p-1">女 (Col)</th>
+                                        <th class="border border-emerald-200 p-1">總計</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td class="border border-emerald-200 p-1 font-bold">4A</td><td>15</td><td>15</td><td class="bg-emerald-50">30</td></tr>
+                                    <tr><td class="border border-emerald-200 p-1 font-bold">4B</td><td>14</td><td>14</td><td class="bg-emerald-50">28</td></tr>
+                                    <tr class="bg-emerald-50 font-bold"><td class="border border-emerald-200 p-1">總計</td><td>29</td><td>29</td><td>58</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="mt-1 text-center text-emerald-600 font-bold">↑ 值 (Values): 計數 (Count)</div>
                         </div>
                     </div>
                 </div>
@@ -591,34 +609,56 @@
         }
 
         // 4.4 進階函數實驗室
-        function runAdvFunc(funcType) {
-            const resultBox = document.getElementById('advFuncResult');
-            const descBox = document.getElementById('advFuncDesc');
+        function runSheetFunc(funcType) {
+            const resultBox = document.getElementById('sheetFuncResult');
+            const descBox = document.getElementById('sheetFuncDesc');
             
             let result = "";
             let desc = "";
 
-            // 模擬數據: A1:A4 -> Apple, Banana, Apple, Orange. B1:B4 -> 50, 30, 20, 80
+            // 數據: A2: Apple (10), A3: Banana (5), A4: Apple (10), A5: Orange (8)
+            // B2: 10, B3: 5, B4: 10, B5: 8
+            // C2: A-001, C3: B-002, C4: A-003, C5: O-004
+
             switch(funcType) {
+                // 基礎
+                case 'SUM': 
+                    result = "33"; 
+                    desc = 'SUM(B2:B5) = 10+5+10+8'; 
+                    break;
+                case 'AVERAGE': 
+                    result = "8.25"; 
+                    desc = 'AVERAGE(B2:B5) = 33/4'; 
+                    break;
+                
+                // 文字
                 case 'LEN': 
                     result = "5"; 
-                    desc = 'LEN("Apple") = 5 (字符長度)'; 
+                    desc = 'LEN(A2) -> "Apple" 的長度'; 
                     break;
                 case 'LEFT': 
-                    result = "HK"; 
-                    desc = 'LEFT("HK123", 2) = "HK" (取左邊2字)'; 
+                    result = "A"; 
+                    desc = 'LEFT(C2, 1) -> "A-001" 左邊 1 個字'; 
                     break;
+                case 'MID': 
+                    result = "002"; 
+                    desc = 'MID(C3, 3, 3) -> "B-002" 從第 3 字取 3 個'; 
+                    break;
+
+                // 條件
                 case 'COUNTIF': 
                     result = "2"; 
-                    desc = 'COUNTIF(A1:A4, "Apple") = 2 (出現2次)'; 
+                    desc = 'COUNTIF(A2:A5, "Apple") -> Apple 出現次數'; 
                     break;
                 case 'SUMIF': 
-                    result = "70"; 
-                    desc = 'SUMIF(A1:A4, "Apple", B1:B4) = 50 + 20 = 70'; 
+                    result = "20"; 
+                    desc = 'SUMIF(A2:A5, "Apple", B2:B5) -> Apple 對應的 Price 總和 (10+10)'; 
                     break;
+
+                // 查找
                 case 'VLOOKUP': 
-                    result = "30"; 
-                    desc = 'VLOOKUP("Banana", A1:B4, 2, FALSE) = 30'; 
+                    result = "5"; 
+                    desc = 'VLOOKUP("Banana", A2:B5, 2, 0) -> 找 Banana 傳回第 2 欄 (Price)'; 
                     break;
             }
             
@@ -637,12 +677,11 @@
             document.querySelectorAll('.chart-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById('chart-' + type).classList.remove('hidden');
             
-            // Activate button logic (simplified)
+            // Activate button
             const btns = document.querySelectorAll('.chart-btn');
             if(type === 'column') btns[0].classList.add('active');
             if(type === 'line') btns[1].classList.add('active');
             if(type === 'pie') btns[2].classList.add('active');
-            if(type === 'scatter') btns[3].classList.add('active');
         }
 
         // 4.7 數據分析表格邏輯
