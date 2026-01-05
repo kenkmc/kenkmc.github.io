@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3. 數據表示 - ICT 學習資源網</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- MathJax for Formulas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f0f9ff; }
+        
+        /* ----------------------------------------------------
+           短除法樣式 (Final Fix for Line Height)
+           ---------------------------------------------------- */
+        .factorization-wrapper {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            line-height: 1.8;
+            padding: 10px;
+            margin-left: -20px;
+        }
+
+        .divisors-column {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-right: 8px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .dividends-column {
+            display: flex;
+            flex-direction: column;
+            position: relative; /* 關鍵：作為定位基準 */
+        }
+        
+        /* 使用偽元素畫左邊的直線，高度減去最後一行 (36px) */
+        .dividends-column::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: calc(100% - 36px); /* 扣除最後一格的高度 */
+            background-color: #374151; /* gray-700 */
+        }
+
+        .dividend {
+            padding: 0 12px;
+            border-bottom: 2px solid #374151;
+            text-align: left;
+        }
+        
+        /* 最後一個商數：無底線 */
+        .dividend:last-child {
+            border-bottom: none; 
+        }
+
+        .remainders-column {
+            display: flex;
+            flex-direction: column;
+            margin-left: 8px;
+            color: #dc2626;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        /* 統一高度，確保 calc 計算準確 */
+        .divisor, .dividend, .remainder {
+            height: 36px;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* ----------------------------------------------------
+           直式計算樣式
+           ---------------------------------------------------- */
+        .binary-calc-box { 
+            font-family: 'Courier New', monospace; 
+            font-size: 1.5rem; 
+            letter-spacing: 0.5rem; 
+            text-align: right; 
+            display: inline-block; 
+            line-height: 1.5;
+            margin-top: 1rem; 
+        }
+        .calc-row { display: flex; justify-content: flex-end; padding-right: 10px; position: relative; }
+        .calc-line { border-top: 2px solid #cbd5e1; margin-top: 5px; padding-top: 5px; }
+        .calc-operator { position: absolute; left: -1.5rem; top: 0; font-weight: bold; color: #10b981; }
+        .calc-carry { 
+            color: #f59e0b; 
+            font-size: 0.8rem; 
+            position: absolute; 
+            top: -25px;
+            right: 0;
+            width: 100%;
+            text-align: right;
+            pointer-events: none;
+            letter-spacing: 0.5rem; 
+            padding-right: 10px; 
+        }
+        
+        /* 卡片特效 */
+        .hover-card { transition: all 0.3s ease; }
+        .hover-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+
+        /* 多媒體 Tab */
+        .tab-btn.active { color: #4f46e5; border-bottom: 2px solid #4f46e5; font-weight: 700; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 奇偶檢測位元動畫 */
+        .bit-box { transition: all 0.3s ease; }
+        .bit-new { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* 索引演示方塊動畫 */
+        .idx-block { transition: all 0.3s ease; }
+        .idx-scanning { background-color: #fef08a !important; border-color: #eab308 !important; transform: scale(1.1); box-shadow: 0 0 10px rgba(234, 179, 8, 0.5); }
+        .idx-found { background-color: #22c55e !important; color: white !important; border-color: #15803d !important; transform: scale(1.2); box-shadow: 0 0 15px rgba(34, 197, 94, 0.6); z-index: 10; }
+        .idx-visited { background-color: #f1f5f9; color: #cbd5e1; border-color: #e2e8f0; }
+
+        /* 存取動畫樣式 */
+        .access-block { transition: all 0.3s; }
+        .access-active { background-color: #fbbf24 !important; border-color: #d97706 !important; transform: scale(1.1); box-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
+        .head-pointer { transition: left 0.5s ease-in-out, top 0.5s ease-in-out; }
+    </style>
+</head>
+<body class="text-slate-700 flex flex-col min-h-screen">
+
+    <!-- 頂部導航 -->
+    <header class="bg-indigo-700 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="hover:bg-indigo-600 p-2 rounded-lg transition" title="回首頁">
+                    <i data-lucide="home" class="w-6 h-6"></i>
+                </a>
+                <span class="font-bold text-lg hidden md:block">必修部分 A > 3. 數據表示</span>
+            </div>
+            <div class="text-sm bg-indigo-800 px-3 py-1 rounded-full flex items-center gap-2">
+                <i data-lucide="binary" class="w-4 h-4"></i> 
+                <span class="hidden sm:inline">進制與多媒體</span>
+            </div>
+        </div>
+        <!-- 進度條 -->
+        <div class="h-1 bg-indigo-900 w-full">
+            <div id="progressBar" class="h-full bg-cyan-400 w-0 transition-all duration-300"></div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 max-w-5xl space-y-16 flex-grow">
+
+        <!-- 3.1 數字系統 Number Systems -->
+        <section id="sec3-1" class="scroll-mt-24">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-bold text-sm">3.1</span>
+                <h2 class="text-3xl font-bold text-slate-800">數字系統 (Number Systems)</h2>
+            </div>
+
+            <!-- 概念簡介 -->
+            <div class="grid md:grid-cols-3 gap-6 mb-12">
+                <div class="bg-white p-6 rounded-xl border border-gray-200 hover-card">
+                    <div class="text-blue-600 font-bold text-xl mb-2 flex items-center gap-2">
+                        <i data-lucide="hash" class="w-5 h-5"></i> 十進制
+                    </div>
+                    <p class="text-sm text-slate-600 mb-2">Decimal</p>
+                    <div class="font-mono bg-blue-50 p-2 rounded text-center text-blue-800 text-sm">0, 1, 2 ... 9</div>
+                    <p class="text-xs text-center mt-2 text-slate-400">人類日常使用 (Base 10)</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-gray-200 hover-card">
+                    <div class="text-emerald-600 font-bold text-xl mb-2 flex items-center gap-2">
+                        <i data-lucide="cpu" class="w-5 h-5"></i> 二進制
+                    </div>
+                    <p class="text-sm text-slate-600 mb-2">Binary</p>
+                    <div class="font-mono bg-emerald-50 p-2 rounded text-center text-emerald-800 text-sm">0, 1</div>
+                    <p class="text-xs text-center mt-2 text-slate-400">電腦內部使用 (Base 2)</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-gray-200 hover-card">
+                    <div class="text-purple-600 font-bold text-xl mb-2 flex items-center gap-2">
+                        <i data-lucide="palette" class="w-5 h-5"></i> 十六進制
+                    </div>
+                    <p class="text-sm text-slate-600 mb-2">Hexadecimal</p>
+                    <div class="font-mono bg-purple-50 p-2 rounded text-center text-purple-800 text-sm">0-9, A-F</div>
+                    <p class="text-xs text-center mt-2 text-slate-400">簡化二進制顯示 (Base 16)</p>
+                </div>
+            </div>
+
+            <!-- 互動工具 1: 短除法演示 (Line Height Fix) -->
+            <div class="bg-white rounded-2xl shadow-lg border border-indigo-100 overflow-hidden mb-12">
+                <div class="bg-indigo-600 p-4 text-white flex justify-between items-center">
+                    <h3 class="font-bold text-lg flex items-center gap-2">
+                        <i data-lucide="calculator" class="w-5 h-5"></i> 進制轉換：短除法 (Short Division)
+                    </h3>
+                    <span class="text-xs bg-indigo-500 px-2 py-1 rounded">參考課本 P.5</span>
+                </div>
+                
+                <div class="p-6 md:flex gap-8">
+                    <!-- 左側控制 -->
+                    <div class="md:w-1/3 space-y-6">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">輸入十進制數字 (Decimal)</label>
+                            <input type="number" id="decInput" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-lg font-mono" placeholder="例如: 25" value="25">
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <p class="text-sm font-bold text-slate-700">選擇目標進制：</p>
+                            <button onclick="generateShortDivision(2)" class="w-full flex items-center justify-between bg-emerald-50 text-emerald-700 border border-emerald-200 py-3 px-4 rounded-lg hover:bg-emerald-100 transition">
+                                <span class="font-bold">轉二進制 (Base 2)</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="generateShortDivision(16)" class="w-full flex items-center justify-between bg-purple-50 text-purple-700 border border-purple-200 py-3 px-4 rounded-lg hover:bg-purple-100 transition">
+                                <span class="font-bold">轉十六進制 (Base 16)</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+
+                        <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200 text-sm text-yellow-800 leading-relaxed">
+                            <strong class="block mb-1"><i data-lucide="lightbulb" class="w-4 h-4 inline mr-1"></i> 學習提示：</strong>
+                            不斷將數字除以基數 (2 或 16)，記錄餘數，直到商數小於基數為止。最後的答案是由最後的商數開始，由下而上讀取餘數。
+                        </div>
+                    </div>
+
+                    <!-- 右側演示區 -->
+                    <div class="md:w-2/3 bg-slate-50 rounded-xl border border-slate-200 flex flex-col items-center justify-center p-8 min-h-[400px]">
+                        <div id="divisionOutput" class="text-slate-700 w-full overflow-x-auto flex justify-center">
+                            <p class="text-slate-400 flex flex-col items-center gap-2">
+                                <i data-lucide="mouse-pointer-click" class="w-8 h-8 opacity-50"></i>
+                                請在左側輸入數字並點擊按鈕
+                            </p>
+                        </div>
+                        <div id="divisionResult" class="mt-8 hidden animate-bounce-in">
+                            <div class="text-xs text-slate-500 uppercase tracking-wider mb-1 text-center">轉換結果</div>
+                            <div class="text-2xl font-bold text-indigo-600 bg-white px-8 py-3 rounded-full shadow-sm border border-indigo-100 font-mono tracking-widest" id="resultText">
+                                <!-- Result -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 互動工具 2: 二進制直式計算機 -->
+            <div class="bg-slate-800 rounded-2xl shadow-lg overflow-hidden text-white mb-12">
+                <div class="bg-slate-900 p-4 border-b border-slate-700 flex justify-between items-center">
+                    <h3 class="font-bold text-lg flex items-center gap-2">
+                        <i data-lucide="plus-minus" class="w-5 h-5 text-emerald-400"></i> 二進制運算 (直式)
+                    </h3>
+                    <span class="text-xs bg-slate-700 px-2 py-1 rounded text-slate-300">參考課本 P.6</span>
+                </div>
+
+                <div class="p-6 grid md:grid-cols-2 gap-8">
+                    <!-- 控制區 -->
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">數字 A (Binary)</label>
+                                <input type="text" id="binA" class="w-full bg-slate-700 border border-slate-600 rounded p-3 text-white font-mono tracking-wider focus:border-emerald-500 focus:outline-none" placeholder="1010" value="1010">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">數字 B (Binary)</label>
+                                <input type="text" id="binB" class="w-full bg-slate-700 border border-slate-600 rounded p-3 text-white font-mono tracking-wider focus:border-emerald-500 focus:outline-none" placeholder="0101" value="0001">
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <button onclick="calcBinary('add')" class="flex-1 bg-blue-600 hover:bg-blue-500 py-3 rounded-lg font-bold transition flex justify-center items-center gap-2">
+                                <i data-lucide="plus" class="w-4 h-4"></i> 加法
+                            </button>
+                            <button onclick="calcBinary('sub')" class="flex-1 bg-rose-600 hover:bg-rose-500 py-3 rounded-lg font-bold transition flex justify-center items-center gap-2">
+                                <i data-lucide="minus" class="w-4 h-4"></i> 減法
+                            </button>
+                        </div>
+                        <div class="bg-slate-700/50 p-4 rounded-lg text-xs text-slate-400 space-y-2">
+                            <strong class="text-emerald-400 block mb-1">二進制加法規則：</strong>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>0 + 0 = 0</li>
+                                <li>0 + 1 = 1</li>
+                                <li>1 + 1 = 10 (進位 1, 寫 0)</li>
+                                <li>1 + 1 + 1 = 11 (進位 1, 寫 1)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 直式顯示區 -->
+                    <div class="bg-black/30 rounded-xl p-8 flex items-center justify-center relative min-h-[200px]">
+                        <div class="absolute top-2 right-4 text-xs text-slate-500">Result Display</div>
+                        <div id="calcDisplay" class="binary-calc-box">
+                            <span class="text-slate-500 text-sm tracking-normal">等待運算...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3.2 數據表示 (多媒體) -->
+        <section id="sec3-2" class="scroll-mt-24">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-bold text-sm">3.2</span>
+                <h2 class="text-3xl font-bold text-slate-800">數據表示 (多媒體)</h2>
+            </div>
+            
+             <!-- Tab Navigation -->
+             <div class="flex border-b border-gray-200 mb-8 overflow-x-auto">
+                <button class="tab-btn active px-6 py-3 text-gray-500 hover:text-indigo-600 transition whitespace-nowrap" onclick="switchTab('text', this)">文本 (Text)</button>
+                <button class="tab-btn px-6 py-3 text-gray-500 hover:text-indigo-600 transition whitespace-nowrap" onclick="switchTab('image', this)">圖像 (Images)</button>
+                <button class="tab-btn px-6 py-3 text-gray-500 hover:text-indigo-600 transition whitespace-nowrap" onclick="switchTab('audio', this)">聲音 (Audio)</button>
+                <button class="tab-btn px-6 py-3 text-gray-500 hover:text-indigo-600 transition whitespace-nowrap" onclick="switchTab('video', this)">視像 (Video)</button>
+            </div>
+            
+            <div id="content-text" class="tab-content active">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 mb-8">
+                     <h3 class="text-xl font-bold text-indigo-800 mb-4 flex items-center gap-2">
+                        <i data-lucide="type" class="w-6 h-6"></i> 字符編碼系統
+                    </h3>
+                    <p class="text-slate-600 mb-6">電腦內部只能處理數字 (0和1)。需使用編碼表轉換。</p>
+                    <div class="bg-indigo-900 rounded-xl p-6 text-white">
+                        <h4 class="font-bold mb-4 flex items-center gap-2"><i data-lucide="code" class="w-5 h-5 text-yellow-400"></i> 互動體驗：字符解碼器</h4>
+                        <div class="flex flex-col md:flex-row gap-6 items-center">
+                            <div class="w-full md:w-1/3">
+                                <label class="text-xs text-indigo-200 block mb-2">輸入一個字元</label>
+                                <input type="text" id="charInput" maxlength="1" class="w-full text-center text-5xl font-bold bg-white/10 border border-indigo-500/50 rounded-lg py-4 focus:outline-none focus:bg-white/20 transition text-white" placeholder="A">
+                            </div>
+                            <div class="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div class="bg-black/20 p-3 rounded-lg text-center"><div class="text-xs text-indigo-300 mb-1">ASCII</div><div id="outAscii" class="font-mono text-lg font-bold text-white">-</div></div>
+                                <div class="bg-black/20 p-3 rounded-lg text-center"><div class="text-xs text-indigo-300 mb-1">Unicode</div><div id="outUnicode" class="font-mono text-lg font-bold text-yellow-300">-</div></div>
+                                <div class="bg-black/20 p-3 rounded-lg text-center"><div class="text-xs text-indigo-300 mb-1">Binary</div><div id="outBinary" class="font-mono text-lg font-bold text-emerald-300">-</div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="content-image" class="tab-content"></div>
+            <div id="content-audio" class="tab-content"></div>
+            <div id="content-video" class="tab-content"></div>
+
+            <!-- 檔案大小計算機 -->
+            <div class="mt-12 bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                <h3 class="font-bold text-lg text-slate-800 mb-4 flex items-center gap-2"><i data-lucide="hard-drive" class="w-5 h-5 text-slate-500"></i> 簡易檔案大小計算機 (圖像)</h3>
+                <div class="grid md:grid-cols-4 gap-4 items-end">
+                    <div><label class="block text-xs font-bold mb-1 text-slate-500">闊度 (px)</label><input type="number" id="calcW" class="w-full p-2 border rounded" value="1920"></div>
+                    <div><label class="block text-xs font-bold mb-1 text-slate-500">高度 (px)</label><input type="number" id="calcH" class="w-full p-2 border rounded" value="1080"></div>
+                    <div><label class="block text-xs font-bold mb-1 text-slate-500">顏色深度 (Bit)</label><input type="number" id="calcD" class="w-full p-2 border rounded" value="24"></div>
+                    <button onclick="calcFileSize()" class="bg-indigo-600 text-white p-2 rounded font-bold hover:bg-indigo-700 transition">計算大小</button>
+                </div>
+                <div id="fileSizeResult" class="mt-6 text-center"><span class="text-sm text-slate-400">點擊計算查看結果</span></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 頁尾 -->
+    <footer class="bg-slate-100 py-8 mt-12 text-center text-slate-500 text-sm">
+        <p>高中 ICT 學習資源網 &copy; 2025</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // ----------------------------------------------------
+        // 1. 短除法生成邏輯 (FINAL Fix for Line Height)
+        // ----------------------------------------------------
+        function formatRemainder(remainder) {
+            if (remainder >= 10) {
+                const hexChars = ['A', 'B', 'C', 'D', 'E', 'F'];
+                return `${remainder} (${hexChars[remainder - 10]})`;
+            }
+            return remainder;
+        }
+
+        function generateShortDivision(base) {
+            const decInput = document.getElementById('decInput').value;
+            const outputDiv = document.getElementById('divisionOutput');
+            const resultDiv = document.getElementById('divisionResult');
+            const resultText = document.getElementById('resultText');
+            
+            if(!decInput || decInput < 0) {
+                alert("請輸入有效的正整數");
+                return;
+            }
+
+            let num = parseInt(decInput);
+            
+            // 準備數據
+            let quotients = [num]; 
+            let usedDivisors = []; 
+            let remainders = [];
+            
+            let currentNum = num;
+            while (currentNum >= base) {
+                let quotient = Math.floor(currentNum / base);
+                let remainder = currentNum % base;
+                remainders.push(remainder);
+                usedDivisors.push(base);
+                quotients.push(quotient);
+                currentNum = quotient;
+            }
+            
+            outputDiv.innerHTML = ''; 
+            
+            const wrapper = document.createElement('div');
+            wrapper.className = 'factorization-wrapper';
+
+            const divisorsCol = document.createElement('div');
+            divisorsCol.className = 'divisors-column';
+            usedDivisors.forEach(d => { divisorsCol.innerHTML += `<div class="divisor">${d}</div>`; });
+            divisorsCol.innerHTML += `<div class="divisor">&nbsp;</div>`;
+
+            const dividendsCol = document.createElement('div');
+            dividendsCol.className = 'dividends-column';
+            quotients.forEach(q => { dividendsCol.innerHTML += `<div class="dividend">${q}</div>`; });
+
+            const remaindersCol = document.createElement('div');
+            remaindersCol.className = 'remainders-column';
+            remaindersCol.innerHTML += '<div class="remainder">&nbsp;</div>'; 
+            remainders.forEach(r => {
+                let rText = (base === 16) ? formatRemainder(r) : r;
+                remaindersCol.innerHTML += `<div class="remainder">...${rText}</div>`;
+            });
+            
+            wrapper.appendChild(divisorsCol);
+            wrapper.appendChild(dividendsCol);
+            wrapper.appendChild(remaindersCol);
+            outputDiv.appendChild(wrapper); 
+            
+            const arrowDiv = document.createElement('div');
+            arrowDiv.innerHTML = `<div class="mt-6 flex flex-col items-center gap-1 text-sm text-indigo-500 font-bold animate-pulse"><i data-lucide="arrow-up" class="w-6 h-6"></i>最後商數 + 由下而上讀取餘數</div>`;
+            outputDiv.appendChild(arrowDiv);
+
+            const lastQuotient = quotients[quotients.length - 1];
+            let lastQVal = lastQuotient;
+            if (base === 16 && lastQuotient >= 10) {
+                 const hexChars = ['A', 'B', 'C', 'D', 'E', 'F'];
+                 lastQVal = hexChars[lastQuotient - 10];
+            }
+
+            const remainderStrings = remainders.map(r => {
+                if (base === 16 && r >= 10) return ['A','B','C','D','E','F'][r-10];
+                return r;
+            });
+            
+            const finalResult = lastQVal + remainderStrings.reverse().join('');
+            resultText.innerHTML = `${finalResult}<sub>(${base})</sub>`;
+            resultDiv.classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        // ----------------------------------------------------
+        // 2. 二進制直式計算機
+        // ----------------------------------------------------
+        function calcBinary(op) {
+            const strA = document.getElementById('binA').value.trim();
+            const strB = document.getElementById('binB').value.trim();
+            const display = document.getElementById('calcDisplay');
+
+            if(!/^[01]+$/.test(strA) || !/^[01]+$/.test(strB)) {
+                display.innerHTML = "<span class='text-red-400 text-sm'>錯誤: 請輸入有效的二進制數字</span>";
+                return;
+            }
+
+            const maxLen = Math.max(strA.length, strB.length);
+            const arrA = strA.padStart(maxLen, '0').split('').map(Number);
+            const arrB = strB.padStart(maxLen, '0').split('').map(Number);
+            
+            let resultArr = [];
+            let carryDisplay = Array(maxLen).fill(''); 
+            let note = "";
+            let operatorSymbol = op === 'add' ? '+' : '-';
+
+            if (op === 'add') {
+                let tempCarry = 0;
+                for(let i = maxLen - 1; i >= 0; i--) {
+                    let sum = arrA[i] + arrB[i] + tempCarry;
+                    resultArr.unshift(sum % 2);
+                    
+                    let nextCarry = Math.floor(sum / 2);
+                    if(nextCarry > 0 && i > 0) {
+                        carryDisplay[i-1] = '1';
+                    }
+                    tempCarry = nextCarry;
+                }
+                if(tempCarry > 0) {
+                    resultArr.unshift(1);
+                    arrA.unshift(0); 
+                    arrB.unshift(0);
+                    carryDisplay.unshift('1'); 
+                }
+            } else {
+                const numA = parseInt(strA, 2);
+                const numB = parseInt(strB, 2);
+                let res = numA - numB;
+                if(res < 0) {
+                     res = Math.abs(res);
+                     note = "<div class='mt-4 text-xs text-yellow-400 text-right w-full'>注意：結果為負數</div>";
+                     resultArr = res.toString(2).split('');
+                } else {
+                    resultArr = res.toString(2).split('');
+                }
+                while(resultArr.length < maxLen) resultArr.unshift(0);
+            }
+
+            const finalLen = Math.max(arrA.length, arrB.length, resultArr.length);
+            const dispA = Array(finalLen - strA.length).fill('').concat(strA.split(''));
+            const dispB = Array(finalLen - strB.length).fill('').concat(strB.split(''));
+            const dispRes = Array(finalLen - resultArr.length).fill('').concat(resultArr);
+            
+            let finalCarryDisplay = Array(finalLen).fill('');
+            if (op === 'add') {
+                 let c = 0;
+                 const binA = strA.padStart(finalLen, '0').split('').map(Number);
+                 const binB = strB.padStart(finalLen, '0').split('').map(Number);
+                 
+                 for(let i=finalLen-1; i>0; i--) {
+                     let s = binA[i] + binB[i] + c;
+                     if(s >= 2) {
+                         c = 1;
+                         finalCarryDisplay[i-1] = '₁';
+                     } else {
+                         c = 0;
+                     }
+                 }
+            }
+
+            let html = `<div class="binary-calc-container">`;
+            let carryHtml = `<div class="carry-overlay"><div class="operator-cell"></div>`;
+            finalCarryDisplay.forEach(c => { carryHtml += `<div class="carry-cell">${c}</div>`; });
+            carryHtml += `</div>`;
+
+            html += `<div class="calc-row"><div class="operator-cell"></div>`;
+            for(let i=0; i<finalLen; i++) {
+                let char = dispA[i] === '' ? '&nbsp;' : dispA[i];
+                html += `<div class="bit-cell text-slate-300">${char}</div>`;
+            }
+            html += `</div>`;
+
+            html += `<div class="calc-row"><div class="operator-cell">${operatorSymbol}</div>`;
+            for(let i=0; i<finalLen; i++) {
+                let char = dispB[i] === '' ? '&nbsp;' : dispB[i];
+                html += `<div class="bit-cell text-slate-300">${char}</div>`;
+            }
+            html += `</div>`;
+
+            html += `<div class="calc-divider" style="position:relative;">${carryHtml}</div>`;
+
+            html += `<div class="calc-row result-row"><div class="operator-cell"></div>`;
+            for(let i=0; i<finalLen; i++) {
+                let char = dispRes[i] === '' ? '&nbsp;' : dispRes[i];
+                html += `<div class="bit-cell">${char}</div>`;
+            }
+            html += `</div>`;
+
+            html += `</div>${note}`;
+            display.innerHTML = html;
+        }
+
+        // ----------------------------------------------------
+        // 3. 字符編碼 & 4. 多媒體 Tabs & Size Calc
+        // ----------------------------------------------------
+        document.getElementById('charInput').addEventListener('input', function(e) {
+            const char = e.target.value;
+            if (char.length > 0) {
+                const code = char.charCodeAt(0);
+                document.getElementById('outAscii').textContent = (code >= 0 && code <= 127) ? code : "非標準";
+                document.getElementById('outUnicode').textContent = `U+${code.toString(16).toUpperCase().padStart(4, '0')}`;
+                document.getElementById('outBinary').textContent = code.toString(2).padStart(8, '0');
+            }
+        });
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('content-' + tabId).classList.add('active');
+            btn.classList.add('active');
+            
+            // Dynamic content rendering for tab (to save initial HTML space)
+             if(tabId === 'image' && !document.getElementById('content-image').innerHTML) {
+                 document.getElementById('content-image').innerHTML = `<div class="grid md:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 hover-card">
+                        <div class="flex items-center gap-3 mb-4"><div class="bg-pink-100 p-2 rounded-lg"><i data-lucide="image" class="w-6 h-6 text-pink-600"></i></div><h3 class="font-bold text-xl text-slate-800">點陣圖 (Bitmap)</h3></div>
+                        <ul class="list-disc list-inside text-sm text-slate-600 space-y-2 mb-4"><li>由無數個<span class="font-bold text-pink-600">像素</span>組成。</li><li>放大會失真。</li><li>JPG, PNG。</li></ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 hover-card">
+                        <div class="flex items-center gap-3 mb-4"><div class="bg-teal-100 p-2 rounded-lg"><i data-lucide="pen-tool" class="w-6 h-6 text-teal-600"></i></div><h3 class="font-bold text-xl text-slate-800">向量圖 (Vector)</h3></div>
+                        <ul class="list-disc list-inside text-sm text-slate-600 space-y-2"><li>由<span class="font-bold text-teal-600">數學公式</span>定義。</li><li>放大不失真。</li><li>SVG, AI。</li></ul>
+                    </div></div>`;
+                 lucide.createIcons();
+             }
+             if(tabId === 'audio' && !document.getElementById('content-audio').innerHTML) {
+                 document.getElementById('content-audio').innerHTML = `<div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200"><h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2"><i data-lucide="mic" class="w-6 h-6 text-amber-500"></i> 聲音數碼化</h3><p class="text-slate-600">涉及採樣率 (Sampling Rate)、採樣大小 (Sample Size) 和聲道。</p></div>`;
+                 lucide.createIcons();
+             }
+             if(tabId === 'video' && !document.getElementById('content-video').innerHTML) {
+                 document.getElementById('content-video').innerHTML = `<div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200"><h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2"><i data-lucide="film" class="w-6 h-6 text-cyan-500"></i> 視像原理</h3><p class="text-slate-600">連續播放的靜態圖像 (幀 Frame)。關鍵參數：幀率 (fps)、解像度、壓縮編碼。</p></div>`;
+                 lucide.createIcons();
+             }
+        }
+
+        function calcFileSize() {
+            const w = document.getElementById('calcW').value;
+            const h = document.getElementById('calcH').value;
+            const d = document.getElementById('calcD').value;
+            const kb = (w * h * d / 8) / 1024;
+            const mb = kb / 1024;
+            document.getElementById('fileSizeResult').innerHTML = `<div class="text-center"><div class="text-3xl font-bold text-indigo-600">${kb.toFixed(2)} KB</div><div class="text-xs text-slate-500">≈ ${mb.toFixed(2)} MB</div></div>`;
+        }
+    </script>
+</body>
+</html>
