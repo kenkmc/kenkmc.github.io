@@ -68,6 +68,11 @@
             color: white;
             box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.5);
         }
+
+        .eve-intercept-active {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+            border-color: #ef4444 !important;
+        }
     </style>
 </head>
 <body class="p-4">
@@ -107,9 +112,9 @@
                             </div>
                         </div>
 
-                        <!-- Eve (現在她有公鑰了) -->
+                        <!-- Eve -->
                         <div class="p-2 border border-slate-200 rounded-lg bg-slate-100">
-                            <div class="text-[10px] font-bold text-slate-600 mb-2">EVE (駭客) 的蒐集</div>
+                            <div class="text-[10px] font-bold text-slate-600 mb-2">EVE (駭客) 的工具</div>
                             <div class="flex gap-2">
                                 <div id="key-eve-priv" draggable="true" class="draggable-key text-2xl p-2 bg-slate-800 rounded border border-slate-900" data-key="eve-priv" title="Eve 的私鑰">🗝️</div>
                                 <div id="key-alice-pub-eve" draggable="true" class="draggable-key text-2xl p-2 bg-white rounded border border-red-200 text-red-400 opacity-60" data-key="alice-pub" title="盜取的 Alice 公鑰">🔑</div>
@@ -149,7 +154,7 @@
                     <!-- 軌道層 -->
                     <div class="relative h-40 flex items-center px-12">
                         <div class="absolute inset-x-12 h-1 bg-slate-200 rounded-full"></div>
-                        <div id="packet-path" class="absolute left-0 transition-all duration-1000 ease-in-out" style="left: 0%;">
+                        <div id="packet-path" class="absolute left-0 transition-all duration-700 ease-in-out" style="left: 0%;">
                             <div id="main-packet" class="drop-zone w-24 h-24 bg-white border-2 border-slate-200 rounded-xl shadow-lg flex flex-col items-center justify-center relative">
                                 <span id="packet-icon" class="text-4xl">✉️</span>
                                 <div id="status-badge" class="absolute -top-3 -right-3 text-2xl"></div>
@@ -159,10 +164,13 @@
                     </div>
 
                     <!-- 引導層 -->
-                    <div id="guide-box" class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg shadow-sm">
+                    <div id="guide-box" class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg shadow-sm transition-all duration-300">
                         <h4 id="guide-title" class="font-bold text-blue-800 mb-1">場景：傳輸加密</h4>
                         <p id="guide-text" class="text-blue-700 text-sm">請將 <b>Bob 的公鑰 (藍色🔑)</b> 拖到郵件上來加密內容。</p>
-                        <button id="send-btn" class="hidden mt-3 bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold hover:bg-blue-700 transition-all">發送 ➔</button>
+                        <div class="flex gap-2 mt-3">
+                            <button id="send-btn" class="hidden bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold hover:bg-blue-700 transition-all">發送 ➔</button>
+                            <button id="continue-btn" class="hidden bg-slate-600 text-white px-4 py-1 rounded-full text-xs font-bold hover:bg-slate-700 transition-all">數據繼續傳送 ➔</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -173,10 +181,10 @@
 
     <script>
         let currentScenario = 'confidentiality';
-        let step = 1;
+        let step = 1; // 1: Alice, 2: Eve (Middle), 3: Bob
         let isProcessed = false;
         const msg = "秘密：明天下午三點開會。";
-        const encryptedMsg = "0xAF882D...[密文]";
+        const encryptedMsg = "0xAF882D...[密文內容]";
         const signedMsg = "秘密：明天下午三點開會。\n[簽章: 0x92E1...]";
 
         function switchScenario(type) {
@@ -193,21 +201,22 @@
         function resetUI() {
             const packet = document.getElementById('main-packet');
             const path = document.getElementById('packet-path');
-            const sendBtn = document.getElementById('send-btn');
             
             path.style.left = "0%";
-            packet.classList.remove('shake');
+            packet.classList.remove('shake', 'eve-intercept-active');
             document.getElementById('status-badge').innerText = "";
             document.getElementById('packet-icon').innerText = "✉️";
             document.getElementById('packet-label').innerText = "原始郵件";
             document.getElementById('sim-data').innerText = msg;
             document.getElementById('sim-data').style.color = "#10b981";
-            sendBtn.classList.add('hidden');
+            document.getElementById('send-btn').classList.add('hidden');
+            document.getElementById('continue-btn').classList.add('hidden');
+            document.getElementById('eve-avatar').classList.add('opacity-30', 'grayscale');
             
             if (currentScenario === 'confidentiality') {
-                updateGuide("場景：傳輸加密", "目標：確保只有 Bob 能看見。請將 <b>Bob 的公鑰 (藍色🔑)</b> 拖到郵件上進行加密。");
+                updateGuide("場景：傳輸加密", "目標：確保只有 Bob 能看見內容。請將 <b>Bob 的公鑰 (藍色🔑)</b> 拖到郵件上進行加密。");
             } else {
-                updateGuide("場景：數位簽署", "目標：證明信是 Alice 親筆寫的。請將 <b>Alice 的私鑰 (紅色🗝️)</b> 拖到郵件上進行簽署。");
+                updateGuide("場景：數位簽署", "目標：證明信件是由 Alice 親筆撰寫。請將 <b>Alice 的私鑰 (紅色🗝️)</b> 拖到郵件上進行簽署。");
             }
         }
 
@@ -239,43 +248,45 @@
                 // Alice 階段
                 if (currentScenario === 'confidentiality') {
                     if (key === 'bob-pub') {
-                        processStep("🔒", "已加密", encryptedMsg, "#f87171", "加密完成！請點擊發送進行傳輸。");
+                        processStep("🔒", "已加密", encryptedMsg, "#f87171", "加密完成！請點擊下方按鈕發送封包。");
                     } else {
-                        showToast("加密失敗！必須使用『收件人 Bob 的公鑰』。", "red");
+                        showToast("加密失敗！Alice 應該使用對方的公鑰來「上鎖」。", "red");
                         shake(dropTarget);
                     }
                 } else {
                     if (key === 'alice-priv') {
-                        processStep("✍️", "已簽署", signedMsg, "#60a5fa", "簽署完成！請點擊發送證明你的身份。");
+                        processStep("✍️", "已簽署", signedMsg, "#60a5fa", "簽署完成！請點擊發送，將帶有簽名的郵件送出。");
                     } else {
-                        showToast("簽署失敗！Alice 必須用自己的『私鑰』才能產生唯一簽章。", "red");
+                        showToast("簽署失敗！只有 Alice 自己的私鑰才能產生獨一無二的簽名。", "red");
                         shake(dropTarget);
                     }
                 }
             } else if (step === 2) {
-                // 駭客階段
+                // Eve 攔截階段
+                const eveAvatar = document.getElementById('eve-avatar');
                 if (key === 'eve-priv') {
-                    showToast("駭客 Eve 嘗試解密... 錯誤！她沒有對應的私鑰。", "red");
-                    shake(document.getElementById('eve-avatar'));
-                    document.getElementById('sim-data').innerText = "[ERROR] Decryption Failed: Invalid Private Key.";
-                    document.getElementById('sim-data').style.color = "#ef4444";
-                } else if (key === 'bob-pub' || key === 'alice-pub') {
-                    showToast("Eve 試圖使用盜來的公鑰... 無法解碼！公鑰只能用來加密或驗證。", "orange");
+                    showToast("Eve 嘗試用自己的私鑰解密... 失敗！密文與她的金鑰不匹配。", "red");
+                    shake(eveAvatar);
+                    updateDataDisplay("[ERROR] 無法解密：密鑰不正確", "#ef4444");
+                    setTimeout(() => updateDataDisplay(currentScenario === 'confidentiality' ? encryptedMsg : signedMsg, currentScenario === 'confidentiality' ? "#f87171" : "#60a5fa"), 1200);
+                } else if (key === 'alice-pub' || key === 'bob-pub') {
+                    showToast("Eve 嘗試用公鑰破解... 沒用！公鑰只能用來「加密」，不能解開別人的鎖。", "orange");
+                    shake(eveAvatar);
                 }
             } else if (step === 3) {
                 // Bob 階段
                 if (currentScenario === 'confidentiality') {
                     if (key === 'bob-priv') {
-                        finish("📖", "已還原", msg, "#10b981", "Bob 使用自己的私鑰成功解密！");
+                        finish("📖", "已還原", msg, "#10b981", "Bob 使用自己的私鑰順利解開密文！");
                     } else {
-                        showToast("解密失敗！只有 Bob 的私鑰能解開此信。", "red");
+                        showToast("解密失敗！世界上只有 Bob 的私鑰能解開這封信。", "red");
                         shake(dropTarget);
                     }
                 } else {
                     if (key === 'alice-pub') {
-                        finish("✅", "已驗證", msg, "#10b981", "驗證成功！Bob 使用 Alice 的公鑰確認了這是她的筆跡。");
+                        finish("✅", "已驗證", msg, "#10b981", "驗證成功！Bob 使用 Alice 的公鑰確認了這封信確實來自 Alice。");
                     } else {
-                        showToast("驗證失敗！需使用 Alice 的公鑰來對比簽章。", "red");
+                        showToast("驗證失敗！需使用寄件人 Alice 的公鑰來比對簽章。", "red");
                         shake(dropTarget);
                     }
                 }
@@ -294,21 +305,38 @@
 
         document.getElementById('send-btn').onclick = () => {
             const path = document.getElementById('packet-path');
+            const packet = document.getElementById('main-packet');
+            const eveAvatar = document.getElementById('eve-avatar');
+            
+            // 移動到中間 (Eve)
             path.style.left = "calc(50% - 48px)";
-            document.getElementById('eve-avatar').classList.remove('opacity-30', 'grayscale');
             document.getElementById('send-btn').classList.add('hidden');
             step = 2;
-            updateGuide("資料傳輸中...", "駭客 Eve 正在攔截！試試用她的工具解開信件？");
             
             setTimeout(() => {
-                path.style.left = "calc(100% - 110px)";
-                step = 3;
+                eveAvatar.classList.remove('opacity-30', 'grayscale');
+                packet.classList.add('eve-intercept-active');
+                updateGuide("⚠️ 數據被攔截！", "封包目前在駭客 Eve 手中。試著將 <b>Eve 的金鑰 (黑色工具區)</b> 拖到封包上進行破解。看看拿到了公鑰和私鑰的她能否成功？");
+                document.getElementById('continue-btn').classList.remove('hidden');
+            }, 700);
+        };
+
+        document.getElementById('continue-btn').onclick = () => {
+            const path = document.getElementById('packet-path');
+            const packet = document.getElementById('main-packet');
+            
+            packet.classList.remove('eve-intercept-active');
+            path.style.left = "calc(100% - 110px)";
+            document.getElementById('continue-btn').classList.add('hidden');
+            step = 3;
+            
+            setTimeout(() => {
                 if (currentScenario === 'confidentiality') {
-                    updateGuide("Bob 已收到", "請拖曳 <b>Bob 的私鑰 (藍色🗝️)</b> 進行解密。");
+                    updateGuide("Bob 已收到密文", "數據已安全送達。請將 <b>Bob 的私鑰 (藍色🗝️)</b> 拖到封包上解鎖內容。");
                 } else {
-                    updateGuide("Bob 已收到", "請拖曳 <b>Alice 的公鑰 (紅色🔑)</b> 來驗證發件人。");
+                    updateGuide("Bob 已收到簽署件", "數據已送達。請將 <b>Alice 的公鑰 (紅色🔑)</b> 拖到封包上來驗證寄件人身份。");
                 }
-            }, 1500);
+            }, 700);
         };
 
         function finish(icon, label, data, color, guide) {
@@ -317,8 +345,14 @@
             document.getElementById('sim-data').innerText = data;
             document.getElementById('sim-data').style.color = color;
             document.getElementById('status-badge').innerText = "";
-            updateGuide("任務完成！", guide + "<br><br><b>重點：</b>" + 
-                (currentScenario === 'confidentiality' ? "私鑰解密確保了保密性。" : "公鑰驗證確保了身份真偽。"));
+            updateGuide("實驗成功！", guide + "<br><br><b>小結：</b>" + 
+                (currentScenario === 'confidentiality' ? "即使駭客攔截並擁有多把公鑰，沒有正確的『私鑰』依然無法窺探隱私。" : "數位簽章證明了身份。駭客無法偽造 Alice 的私鑰，因此也無法偽造她的身份。"));
+        }
+
+        function updateDataDisplay(text, color) {
+            const el = document.getElementById('sim-data');
+            el.innerText = text;
+            el.style.color = color;
         }
 
         function showToast(m, c) {
@@ -334,7 +368,6 @@
             setTimeout(() => el.classList.remove('shake'), 500);
         }
 
-        // 初始化
         resetUI();
     </script>
 </body>
